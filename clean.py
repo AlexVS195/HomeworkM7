@@ -1,5 +1,5 @@
-import shutil
 import re
+import shutil
 import sys
 from pathlib import Path
 
@@ -23,7 +23,7 @@ def handle_archive(file_name: Path, target_folder: Path):
     file_name.unlink()
 
 # Функція для обробки папки та файлів в ній
-def process_folder(folder: Path):
+def process_folder(folder: Path) -> object:
     for item in folder.iterdir():
         if item.is_dir() and item.name not in ('archives', 'video', 'audio', 'documents', 'images'):
             process_folder(item)
@@ -54,8 +54,6 @@ def move_and_rename_file(source, target_folder, new_name):
     new_name_with_extension = new_name + source.suffix
     source.rename(target_folder / new_name_with_extension)
 
-
-
 # Словник для транслітерації кирилічних символів в латиницю
 CYRILLIC_SYMBOLS = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ'
 TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
@@ -72,29 +70,26 @@ for cyrillic, latin in zip(CYRILLIC_SYMBOLS, TRANSLATION):
 def normalize(name: str) -> str:
     # Транслітеруємо і нормалізуємо назву файла
     translate_name = re.sub(r'\W', '_', name.translate(TRANS))
-    return translate_name   
+    return translate_name
 
 
-
-def start():
-    if sys.argv[1]:
-        folder_process = Path(sys.argv[1])
-        main(folder_process)
+def start(folder_to_process):
+    process_folder(folder_to_process)
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python your_script.py /path/to/folder")
-        sys.exit(1)
-    
-    folder_path = sys.argv[1]
-    folder_to_process = Path(folder_path)
-    
-    if not folder_to_process.is_dir():
-        print(f"Указаний шлях '{folder_path}' не є дійсним каталогом.")
-        sys.exit(1)
-    
-    start(folder_to_process)
+    # Запитуємо у користувача шлях до директорії для сортування
+    folder_path = input("Введіть шлях до директорії для сортування: ")
+    folder_path = Path(folder_path)
+
+    # Перевіряємо, чи існує директорія
+    if folder_path.exists() and folder_path.is_dir():
+        # Запускаємо функцію сортування та передаємо шлях до директорії
+        start(folder_path)
+        print("Сортування завершено.")
+    else:
+        print("Директорія не існує. Перевірте введений шлях.")
+
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: useful
+Version: 1
+Summary: Very useful code
+Home-page: http://github.com/dummy_user/useful
+Author: Flying Circus
+Author-email: flyingcircus@example.com
+License: MIT
+Requires-Dist: markdown
